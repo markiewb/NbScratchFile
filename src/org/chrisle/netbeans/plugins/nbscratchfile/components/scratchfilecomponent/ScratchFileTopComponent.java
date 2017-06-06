@@ -27,10 +27,6 @@ import org.openide.util.NbBundle.Messages;
 )
 @TopComponent.Registration(mode = "editor", openAtStartup = false)
 @ActionID(category = "Window", id = "org.chrisle.netbeans.plugins.nbscratchfile.components.scratchfilecomponent.ScratchFileComponentTopComponent")
-@ActionReferences({
-        @ActionReference(path = "Menu/Window")
-})
-
 @TopComponent.OpenActionRegistration(
         displayName = "#CTL_ScratchFileComponentAction",
         preferredID = "ScratchFileComponentTopComponent"
@@ -41,6 +37,7 @@ import org.openide.util.NbBundle.Messages;
     "HINT_ScratchFileComponentTopComponent=This is a ScratchFileComponent window"
 })
 public final class ScratchFileTopComponent extends TopComponent {
+
     public ScratchFileTopComponent() {
         initComponents();
         setName(Bundle.CTL_ScratchFileComponentTopComponent());
@@ -48,13 +45,11 @@ public final class ScratchFileTopComponent extends TopComponent {
     }
 
     public void setMimeType(String mimeType) {
+        String text = scratchEditor.getText();
         scratchEditor.setContentType(mimeType);
-//        scratchEditor.setEditorKit(CloneableEditorSupport.getEditorKit(mimeType));
-
-//        scratchEditor.getAccessibleContext().setAccessibleName("scratchEditor");
-//        scratchEditor.getAccessibleContext().setAccessibleDescription(mimeType);
+        scratchEditor.setText(text);
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -65,32 +60,53 @@ public final class ScratchFileTopComponent extends TopComponent {
 
         jScrollPane2 = new javax.swing.JScrollPane();
         scratchEditor = new javax.swing.JEditorPane();
+        jPanel1 = new javax.swing.JPanel();
+        jComboBox1 = new javax.swing.JComboBox<>();
 
+        scratchEditor.setText(org.openide.util.NbBundle.getMessage(ScratchFileTopComponent.class, "ScratchFileTopComponent.scratchEditor.text")); // NOI18N
         jScrollPane2.setViewportView(scratchEditor);
+
+        jPanel1.setLayout(new java.awt.GridBagLayout());
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "text/x-java", "text/x-sql", "text/plain" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jComboBox1, new java.awt.GridBagConstraints());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE))
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        setMimeType("" + jComboBox1.getModel().getSelectedItem());
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JEditorPane scratchEditor;
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
-        // TODO add custom code on component opening
+        //set default mimetype after opening
+        //FIXME let the user choose
+        setMimeType("text/x-java");
     }
 
     @Override

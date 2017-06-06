@@ -36,67 +36,17 @@ import org.openide.util.NbBundle.Messages;
 })
 @Messages("CTL_CreateScratchFile=New Scratch File...")
 public final class CreateScratchFile implements ActionListener {
-    private static final AtomicInteger _atomInt = new AtomicInteger(0);
 
     @Override
     public void actionPerformed(ActionEvent e) {
-//        FileTypeWindow fileTypeWindow = new FileTypeWindow();
-//        
-//        FileTypeWindowCntrl.open();
         // TODO: Can't add the editorKit with the mimeType properly.
         ScratchFileTopComponent scratchFileTopComponent = new ScratchFileTopComponent();
 
         scratchFileTopComponent.open();
         scratchFileTopComponent.requestActive();
-
-        scratchFileTopComponent.setMimeType("text/x-java");
-        
-//        try {
-//            DataObject gdo = getDataObject();
-//            Openable openable = gdo.getLookup().lookup(Openable.class);
-//
-//            openable.open();
-//        } catch (DataObjectNotFoundException ex) {
-//            Exceptions.printStackTrace(ex);
-//        } catch (IOException ex) {
-//            Exceptions.printStackTrace(ex);
-//        }
-    }
-
-    protected DataObject getDataObject() throws DataObjectNotFoundException, IOException {
-        String templateName = getTemplate();
-
-        FileObject fo = FileUtil.getConfigRoot().getFileObject(templateName);
-        Enumeration<String> attributes = fo.getAttributes();
-        String test = "";
-        
-//        for (String attribute : attributes) {
-//            test += "\n" + attribute;
-//        }
-        
-//        while (attributes.hasMoreElements()) {
-//            test += "\n" + attributes.nextElement();
-//        }
-//        
-//        JOptionPane.showMessageDialog(null, test);
-        
-        fo.setAttribute("mimeType", "text/javascript");
-        DataObject template = DataObject.find(fo);
-        
-        FileSystem memFS = FileUtil.createMemoryFileSystem();
-        FileObject root = memFS.getRoot();
-        
-        DataFolder dataFolder = DataFolder.findFolder(root);
-        DataObject gdo = template.createFromTemplate(dataFolder, "untitled" + getNextCount());
-        
-        return gdo;
     }
 
     protected String getTemplate() {
         return "Templates/Other/file";
-    }
-
-    private static int getNextCount() {
-        return _atomInt.incrementAndGet();
     }
 }
